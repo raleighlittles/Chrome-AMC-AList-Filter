@@ -1,62 +1,38 @@
 // content.js
 
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      if( request.message === "clicked_browser_action" ) {
+chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
 
-        try {
-            const appLdJson = JSON.parse(document.querySelector('script[type="application/ld+json"]').innerText);
-            const postAuthor = appLdJson.author.name;
-            const uploadDateObj = new Date(Date.parse(appLdJson.datePublished));
-            
-            const postImagesObj = appLdJson.image;
+  let currTabUrl = tabs[0].url;
 
-            for (let i = 0; i < postImagesObj.length; i++) {
+  if (currTabUrl.startswith("https://www.amctheaters.com/movies/")) {
 
-                const imgFilename = constructDownloadedFilename(postAuthor, uploadDateObj);
+    // let premiumShowtimeObj = document.getElementsByClassName("Showtimes-Section Showtimes-Section--PremiumFormat Showtimes-Section-First");
+    // let standardShowtimeObj = document.getElementsByClassName("Showtimes-Section Showtimes-Section--StandardFormat");
 
-                // Execute the actual download
-                downloadMediaFromPost(postImagesObj[i]['contentUrl'], imgFilename);
-            }
+    // "Premium" showtimes are things like IMAX, Dolby Cinema, etc. Sometimes even "standard" showings are excluded from A-List
+    let movieShowtimeObjs = document.querySelectorAll(".Showtimes-Section.Showtimes-Section--PremiumFormat.Showtimes-Section-First, .Showtimes-Section.Showtimes-Section--StandardFormat");
 
-        } catch (exception) {
-            console.error(`Error using ld+json for Lemon8 extension: ${exception.name}: ${exception.message}`);
-            console.log("Falling back to manual HTML scrape approach.");
+    for (let i = 0; i < movieShowtimeObjs.length; i++) {
 
-            const postAuthor = document.getElementsByClassName("info")[0].innerText;
+      // Each showtime has restrictions/features. These are things like: "Closed Caption", "AMC Signature Recliners", "Audio Description".
+      // It is in these features/restrictions where we look for the "Excluded from A-List" label.
+      let showtimeRestrictions = movieShowtimeObjs[i].childNodes[1].childNodes;
 
-            const postImagesObj = document.getElementsByClassName("sharee-carousel-item current-height");
+      for (let j = 0; j < showtimeRestrictions.length; j++) {
 
-            for (let i = 0; i < postImagesObj.length; i++) {
+        if (showtimeRestrictions[j].innerText.startswith("Excluded")){
+          console.log("Showing is excluded!");
 
-                const imgFilename = constructDownloadedFilename(postAuthor, /* uploadDate */ null);
+          // Hide the buttons for each timeslot, if that showtime/event if excluded from A-List
 
-                // Execute the actual download
-                downloadMediaFromPost(postImagesObj[i].childNodes[0].src, imgFilename);
-            }
-        }
-    }
+          let showtimeTimeBtns = movieShowtimeObjs[i].childNodes[2].childNodes[0].childNodes[0].childNodes;
 
-      function downloadMediaFromPost(mediaUrl, filenameToSaveAs) {
-          chrome.runtime.sendMessage({mediaUrl: mediaUrl, filename: filenameToSaveAs});
-      }
-
-      function constructDownloadedFilename(author, uploadDateObj) {
-          const today = new Date();
-
-          const timestamp = 'DA_'.concat(today.getFullYear(), today.getMonth() + 1, today.getDate(),
-                                  'T', today.getHours(), today.getMinutes(), today.getSeconds());
-
-          function constructDateCreatedString(uploadDateObj) {
-            return 'DC_'.concat(uploadDateObj.getFullYear(),
-            uploadDateObj.getMonth()+1, // getMonth()'s return value is 0-indexed
-            uploadDateObj.getDate(),
-            'T', uploadDateObj.getHours(),
-            uploadDateObj.getMinutes(),
-            uploadDateObj.getSeconds());
+          for (let k = 0; k < showtimeTimeBtns.length; k++) {
+            showtimeTimeBtns[k].class = "Btn Btn--default disabled";
           }
-
-          return "lemon8__".concat(author, "__", timestamp, "__", (uploadDateObj == null) ? "" : constructDateCreatedString(uploadDateObj), "_i.jpg");
+        }
       }
-    } 
-  );
+    }
+  }
+
+});
