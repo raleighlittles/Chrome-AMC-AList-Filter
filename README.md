@@ -1,9 +1,6 @@
-# Background
-
-
 # About
 
-This is a Chrome extension for downloading [Lemon8](https://en.wikipedia.org/wiki/Lemon8) posts. Lemon8 is a social media application similar to Instagram, but owned by TikTok.
+This is a simple Chrome extension for filtering out non "A-List" events (ie free) from the showings page.
 
 # Installation
 
@@ -11,24 +8,10 @@ This is a Chrome extension for downloading [Lemon8](https://en.wikipedia.org/wik
 
 2. Click "Load unpacked":
 
-![adding-extension-screenshot](./docs/adding-extension-to-chrome.png)
-
-3. Point to the directory where you cloned this repo.
+3. Point to the directory where you cloned this repository.
 
 # Usage/Features
 
-Navigate to a specific Lemon8 post's page, e.g: `https://www.lemon8-app.com/doktoradreamer/7154627074488140289` then click the "Lemon8 Post Downloader" in your browser actions toolbar:
+When you're on the general showtimes page, this extension will simply mark the "Excluded from A-List" events as disabled (look at the bottom showing).
 
-![screenshot-of-usage](./docs/browser-action-example.png)
-
-Downloaded images/video contain the following in the filename, if available:
-
-1. The uploader's username
-2. The date the post was uploaded
-3. The date the post was downloaded
-
-![screenshot-of-saved-file](./docs/saved-image-results.png)
-
-# Features roadmap
-
-- [ ] Add support for parsing date uploaded 
+![amc-showtimes-screenshot](./docs/example-screenshot.png)

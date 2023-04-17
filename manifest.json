@@ -8,13 +8,15 @@
     "content_scripts": [
       {
         "matches": [
-          "https://www.amctheatres.com/movies/*"
+          "https://www.amctheatres.com/movies/*",
+          "https://www.amctheatres.com/movie-theatres/*"
         ],
-        "js": ["content.js"]
+        "js": ["content.js"],
+        "run_at": "document_end"
       }
     ],
-    "icons": { "48":  "icons/TODO.png",
-              "128":  "icons/TODO.png"},
+    "icons": { "48":  "icons/icon256.png",
+              "128":  "icons/icon512.png"},
     "background": {
       "service_worker": "background.js"
     },
