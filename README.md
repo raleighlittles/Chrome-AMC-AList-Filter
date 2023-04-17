@@ -15,3 +15,9 @@ This is a simple Chrome extension for filtering out non "A-List" events (ie free
 When you're on the general showtimes page, this extension will simply mark the "Excluded from A-List" events as disabled (look at the bottom showing).
 
 ![amc-showtimes-screenshot](./docs/example-screenshot.png)
+
+# Roadmap
+
+- [ ] Fix issue with Chrome's runtime errors? See [here](https://github.com/raleighlittles/Chrome-AMC-AList-Filter/issues/1)
+
+- [ ] Figure out why Chrome is saying the page is loaded when it's not actually finished loading yet. See [here](https://github.com/raleighlittles/Chrome-AMC-AList-Filter/issues/2)
